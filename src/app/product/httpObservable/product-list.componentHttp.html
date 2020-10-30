@@ -1,0 +1,76 @@
+<div class='card'>
+  <div class='card-header'>
+    {{pageTitle}}
+  </div>
+  <div class='card-body'>
+    <div class='row'>
+      <div class='col-md-2'>Filter by:</div>
+      <div class='col-md-4'>
+        <!-- two way data binding assim que mudar a string ela atualiza-->
+        <input type='text'
+               [(ngModel)]='listFilter' />
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col-md-6'>
+        <h4>Filtered by: {{listFilter}}</h4>
+      </div>
+    </div>
+
+    <!-- só ira mostrar a tabela se existir products e houver algum elemento na tabela -->
+    <div class='table-responsive'>
+      <table class='table'
+             *ngIf='products && products.length'>
+        <thead>
+          <tr>
+            <th>
+              <!-- event binding -->
+              <!-- condicional mudar texto botao-->
+                <!-- true = Hide, false = Show -->
+              <button class='btn btn-primary'
+                     (click)='toggleImage()'>
+                     {{showImage ? 'Hide' : 'Show'}} Image
+              </button>
+            </th>
+            <th>Product</th>
+            <th>Code</th>
+            <th>Available</th>
+            <th>Price</th>
+            <th>5 Star Rating</th>
+          </tr>
+        </thead>
+        <!-- data binding  [src]="product.imageUrl"-->
+        <tbody>
+          <!-- <tr *ngFor='let product of products'> -->
+            <!-- para realizar a busca -->
+            <tr *ngFor='let product of filteredProducts'>
+            <td>
+              <img *ngIf = 'showImage'
+                   [src]="product.imageUrl" alt="product image"
+                   [title]='product.productName'
+                   [style.width.px]='imageWidth'
+                   [style.margin.px]='imageMargin'>
+            </td>
+            <!-- adicionar rotas para product detail -->
+            <td>
+              <a [routerLink]="['/products', product.productId]">
+              {{ product.productName }}
+              </a>
+            </td>
+            <!-- ira converter '-' para spaço ' ' -->
+            <td>{{ product.productCode | lowercase | convertToSpaces: '-'}}</td>
+            <td>{{ product.releaseDate }}</td>
+            <td>{{ product.price | currency: 'USD':'symbol':'1.2-2' }}</td>
+            <!-- <td>{{ product.starRating }}</td> -->
+            <!-- component stars, adicionar o binding valor estrela -->
+            <td><pm-star [rating]='product.starRating'
+                          (ratingClicked)='onRatingClicked($event)'>
+                </pm-star></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
